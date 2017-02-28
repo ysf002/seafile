@@ -126,14 +126,14 @@
     <UI>
       <UIRef Id='WixUI_InstallDir_NoLicense' />
       <UIRef Id='WixUI_ErrorProgressText' />
-      <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchApplication">
-        <!-- Launch Seafile after setup. -->
-        NOT Installed
-      </Publish>
+      <!-- <Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchApplication"> -->
+      <!--   <!-\- Launch Seafile after setup. -\-> -->
+      <!--   NOT Installed -->
+      <!-- </Publish> -->
     </UI>
 
-    <Property Id="WixShellExecTarget" Value="[#seafileapplet.exe]" />
-    <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+    <!-- <Property Id="WixShellExecTarget" Value="[#seafileapplet.exe]" /> -->
+    <!-- <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" /> -->
 
     <Feature Id='Main' Level='1'>
       <ComponentRef Id='Seafile_StartMenuShortCut' />
