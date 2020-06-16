@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WixLocalization Culture="zh-cn" xmlns="http://schemas.microsoft.com/wix/2006/localization">
 
-  <String Id="AppName">Seafile</String>
-  <String Id="PackageDescription">Seafile 安装包</String>
-  <String Id="PackageComments">Seafile 安装包</String>
-  <String Id="Manufacturer">北京海文互知网络技术有限公司</String>
-  <String Id="DowngradeErrorMessage">检测到您已经安装了更新版本的 Seafile 。安装程序将自动退出</String>
-  <String Id="UninstallSeafile">删除 Seafile</String>
-  <String Id="StartSeafile">启动 Seafile</String>
-  <String Id="AutoStartText">开机自动启动 Seafile</String>
+  <String Id="AppName">Your Secure Cloud</String>
+  <String Id="PackageDescription">Your Secure Cloud 安装包</String>
+  <String Id="PackageComments">Your Secure Cloud 安装包</String>
+  <String Id="Manufacturer">Your Secure Cloud</String>
+  <String Id="DowngradeErrorMessage">检测到您已经安装了更新版本的 Your Secure Cloud 。安装程序将自动退出</String>
+  <String Id="UninstallSeafile">删除 Your Secure Cloud</String>
+  <String Id="StartSeafile">启动 Your Secure Cloud</String>
+  <String Id="AutoStartText">开机自动启动 Your Secure Cloud</String>
 
   <!-- https://raw.githubusercontent.com/wixtoolset/wix3/e4d1aab946a1df20f01cbc1c40bee68ffe93e8bf/src/ext/UtilExtension/wixlib/en-us.wxl -->
   <!-- Offical wix utilextension doesn't have zh_CN translation. We
