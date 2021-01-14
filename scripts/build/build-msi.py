@@ -815,8 +815,9 @@ def sign_executables():
 
     pack_dir = os.path.join(conf[CONF_BUILDDIR], 'pack')
     exectuables = glob.glob(os.path.join(pack_dir, 'bin', '*.exe'))
-    for exe in exectuables:
-        do_sign(certfile, exe)
+    wait_for_signing_local(exectuables)
+    # for exe in exectuables:
+    #     do_sign(certfile, exe)
 
 def sign_installers():
     certfile = conf.get(CONF_CERTFILE)
@@ -826,11 +827,65 @@ def sign_installers():
 
     pack_dir = os.path.join(conf[CONF_BUILDDIR], 'pack')
     installers = glob.glob(os.path.join(pack_dir, '*.msi'))
-    for fn in installers:
-        name = conf[CONF_BRAND]
-        if name == 'seafile':
-            name = 'Seafile'
-        do_sign(certfile, fn, desc='{} Installer'.format(name))
+    wait_for_signing_local(installers)
+    # for fn in installers:
+    #     name = conf[CONF_BRAND]
+    #     if name == 'seafile':
+    #         name = 'Seafile'
+    #     do_sign(certfile, fn, desc='{} Installer'.format(name))
+
+LOCAL_SIGN_TOP_DIR = 'c:/codesign'
+LOCAL_SIGN_MSI_DIR = os.path.join(LOCAL_SIGN_TOP_DIR, 'msi')
+
+LOCAL_SIGN_MSI_SIGNED_DIR = os.path.join(LOCAL_SIGN_MSI_DIR, 'signed')
+
+LOCAL_SIGN_DONE_FILE = os.path.join(LOCAL_SIGN_MSI_DIR, 'sign-done.txt')
+LOCAL_SIGN_SLACK_NOTIFY_SCRIPT = os.path.join(LOCAL_SIGN_TOP_DIR, 'seafile_slack_notify.py')
+
+def wait_for_signing_local(files):
+    files_summary = ','.join([os.path.basename(fn) for fn in files])
+
+    def init_dir(path):
+        if os.path.exists(path):
+            for f in glob.glob(os.path.join(path, "*")):
+                if not os.path.isdir(f):
+                    os.unlink(f)
+        else:
+            must_mkdir(path)
+
+    init_dir(LOCAL_SIGN_MSI_SIGNED_DIR)
+
+    if os.path.exists(LOCAL_SIGN_DONE_FILE):
+        os.unlink(LOCAL_SIGN_DONE_FILE)
+
+    file_pairs = []
+    for fn in files:
+        signed_dst = os.path.join(LOCAL_SIGN_MSI_SIGNED_DIR, os.path.basename(fn))
+        info('copying file {} => {}'.format(fn, signed_dst))
+        shutil.copy(fn, signed_dst)
+        file_pairs.append((fn, signed_dst))
+
+    if os.path.exists(LOCAL_SIGN_SLACK_NOTIFY_SCRIPT):
+        args = [
+            'python',
+            LOCAL_SIGN_SLACK_NOTIFY_SCRIPT,
+            '--botname', 'seafpkg-codesign-notify',
+            '--at', 'Yujone',
+            'seafile-client', # channel
+            'files {} waiting to be signed'.format(files_summary) # msg
+        ]
+        run_argv(args)
+
+    info('waitinging for files {} to be signed'.format(files_summary))
+    while True:
+        time.sleep(5)
+        if os.path.exists(LOCAL_SIGN_DONE_FILE):
+            break
+    info('files {} signed'.format(files_summary))
+
+    for fn1, fn2 in file_pairs:
+        info('copying file {} => {}'.format(fn2, fn1))
+        shutil.copy(fn2, fn1)
 
 def do_sign(certfile, fn, desc=None):
     certfile = to_win_path(certfile)
@@ -1001,7 +1056,8 @@ def dump_env():
         print '%s: %s' % (k, v)
 
 def need_sign():
-    return conf[CONF_BRAND].lower() == 'seafile'
+    # return conf[CONF_BRAND].lower() == 'seafile'
+    return True
 
 def main():
     dump_env()
