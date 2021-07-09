@@ -24,7 +24,7 @@ BUILDDIR = os.path.join(os.getcwd(), "..\\..\\..\\")
 ##################
 # The seafile package project directory
 # Directory where the signing certificate is located
-CERTFILE = "C:/certs/seafile.pfx"
+CERTFILE = "C:/certs/codesigning-ysc.pfx"
 
 # Qt library directory
 QT_DIR = "C:/Qt/Qt5.15.1/5.15.1/msvc2019_64"
@@ -165,7 +165,7 @@ def do_sign(certfile, fn, desc=None):
     else:
         desc_flags = ''
 
-    signcmd = 'signtool.exe sign -fd sha256 -t http://timestamp.comodoca.com -f {} {} {}'.format(certfile, desc_flags, fn)
+    signcmd = 'signtool.exe sign -fd sha256 -t http://timestamp.comodoca.com -p 2FCqM17mmvUweYG9  -f {} {} {}'.format(certfile, desc_flags, fn)
     i = 0
     while i < RETRY_COUNT:
         time.sleep(30)
@@ -458,9 +458,9 @@ def signinstaller(msi_file_path, language):
     global version
     msi_name = ''
     if language != 'cn':
-        msi_name = 'seafile-{}-{}.msi' .format(version, language)
+        msi_name = 'YourSecureCloud-{}-{}.msi' .format(version, language)
     else:
-        msi_name = 'seafile-{}.msi' .format(version)
+        msi_name = 'YourSecureCloud-{}.msi' .format(version)
     do_sign(CERTFILE, msi_file_path, msi_name)
     must_rename(msi_file_path, os.path.join(WIX_PACKAGE_DIR, msi_name))
 
